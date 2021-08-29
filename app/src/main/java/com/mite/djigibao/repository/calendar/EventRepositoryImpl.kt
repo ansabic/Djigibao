@@ -18,4 +18,8 @@ class EventRepositoryImpl @Inject constructor(
     override suspend fun insertEvent(event: Event) {
         eventDao.insertEvent(event)
     }
+
+    override suspend fun insertEvents(events: List<Event>) {
+        eventDao.insertEvents(events)
+    }
 }

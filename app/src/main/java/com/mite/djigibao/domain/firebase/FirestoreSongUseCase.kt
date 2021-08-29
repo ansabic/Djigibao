@@ -5,6 +5,7 @@ import com.mite.djigibao.core.FIRESTORE_SONGS
 import com.mite.djigibao.core.OFFSET_DATE_TIME_PATTERN
 import com.mite.djigibao.database.entities.Song
 import com.mite.djigibao.database.entities.User
+import com.mite.djigibao.domain.firebase.entities.FirestoreSong
 import com.mite.djigibao.model.Role
 import com.mite.djigibao.repository.songs.ISongsRepository
 import com.mite.djigibao.repository.users.IUserRepository
@@ -32,28 +33,28 @@ class FirestoreSongUseCase @Inject constructor(
                 .collection(FIRESTORE_SONGS)
                 .get()
                 .addOnSuccessListener {
-                val data = it.documents
-                val resultList = mutableListOf<Song>()
-                data.forEach { document ->
-                    val fireSong = document.toObject(FirestoreSong::class.java)
-                    if (!localSongs.map { song ->
-                            song.name
-                        }.contains(fireSong?.name))
-                        fireSong?.let { firestoreSong ->
-                            mapFirestoreSongToSong(
-                                firestoreSong,
-                                users
-                            )
-                        }?.let { song ->
-                            resultList.add(
-                                song
-                            )
-                        }
+                    val data = it.documents
+                    val resultList = mutableListOf<Song>()
+                    data.forEach { document ->
+                        val fireSong = document.toObject(FirestoreSong::class.java)
+                        if (!localSongs.map { song ->
+                                song.name
+                            }.contains(fireSong?.name))
+                            fireSong?.let { firestoreSong ->
+                                mapFirestoreSongToSong(
+                                    firestoreSong,
+                                    users
+                                )
+                            }?.let { song ->
+                                resultList.add(
+                                    song
+                                )
+                            }
+                    }
+                    continuation.resume(resultList.toList())
+
+
                 }
-                continuation.resume(resultList.toList())
-
-
-            }
             document.addOnFailureListener {
                 continuation.cancel()
             }
@@ -84,13 +85,25 @@ class FirestoreSongUseCase @Inject constructor(
             }
         } else
             false
-
     }
+
+    suspend fun syncSongs() {
+        val local = songRepository.getAllSongs()
+        val remote = getSongs()
+        val resultList = mutableListOf<Song>()
+        remote.forEach {
+            if (!local.map { song -> song.name }.contains(it.name))
+                resultList.add(it)
+        }
+        songRepository.insertSongs(resultList.toList())
+    }
+
     private fun mapSongToFirestoreSong(song: Song): FirestoreSong {
         val dateTimeFormatter = DateTimeFormatter.ofPattern(OFFSET_DATE_TIME_PATTERN).withZone(
-            ZoneId.of("Europe/Berlin"))
+            ZoneId.of("Europe/Berlin")
+        )
         return FirestoreSong(
-            song.name,song.body,
+            song.name, song.body,
             song.duration,
             song.creationDate.format(dateTimeFormatter),
             song.instruments,
@@ -102,7 +115,8 @@ class FirestoreSongUseCase @Inject constructor(
 
     private fun mapFirestoreSongToSong(remote: FirestoreSong, users: List<User>?): Song {
         val dateTimeFormatter = DateTimeFormatter.ofPattern(OFFSET_DATE_TIME_PATTERN).withZone(
-            ZoneId.of("Europe/Berlin"))
+            ZoneId.of("Europe/Berlin")
+        )
         return Song(
             remote.name,
             remote.body,

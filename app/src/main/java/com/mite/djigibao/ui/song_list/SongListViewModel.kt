@@ -1,4 +1,4 @@
-package com.mite.djigibao.ui.lista_pisama
+package com.mite.djigibao.ui.song_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,7 +25,7 @@ class SongListViewModel @Inject constructor(
         _goToNewSong.postValue(true)
     }
 
-    fun leftScreen() = viewModelScope.launch(Dispatchers.IO){
+    fun leftScreen() = viewModelScope.launch(Dispatchers.IO) {
         _goToNewSong.postValue(false)
     }
 

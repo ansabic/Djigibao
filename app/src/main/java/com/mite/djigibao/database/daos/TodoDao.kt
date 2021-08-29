@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mite.djigibao.database.entities.TodoItem
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class TodoDao {
@@ -17,7 +16,7 @@ abstract class TodoDao {
     abstract suspend fun insertTodoItem(item: TodoItem)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertTOdoItems(items: List<TodoItem>)
+    abstract suspend fun insertTodoItems(items: List<TodoItem>)
 
     @Query("UPDATE todo SET done = :done WHERE id IN (:ids)")
     abstract suspend fun resolveTodoItem(ids: List<Long>, done: Boolean = true)

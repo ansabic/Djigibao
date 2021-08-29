@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mite.djigibao.database.entities.Event
+import com.mite.djigibao.domain.firebase.FirestoreEventUseCase
 import com.mite.djigibao.repository.calendar.IEventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
-    private val eventRepository: IEventRepository
+    private val eventRepository: IEventRepository,
+    private val firestoreEventUseCase: FirestoreEventUseCase
 ) : ViewModel() {
 
     private val _showDialog by lazy { MutableLiveData(false) }
@@ -49,14 +51,14 @@ class CalendarViewModel @Inject constructor(
     }
 
     fun newEvent() = viewModelScope.launch(Dispatchers.IO) {
-        eventRepository.insertEvent(
-            Event(
-                title = title.value ?: "",
-                description = description.value ?: "",
-                createdDate = ZonedDateTime.now(),
-                dueDate = date.value ?: ZonedDateTime.now()
-            )
+        val event = Event(
+            title = title.value ?: "",
+            description = description.value ?: "",
+            createdDate = ZonedDateTime.now(),
+            dueDate = date.value ?: ZonedDateTime.now()
         )
+        eventRepository.insertEvent(event)
+        firestoreEventUseCase.insertEventRemote(event)
         getAllEvents(date.value)
         _showDialog.postValue(false)
     }

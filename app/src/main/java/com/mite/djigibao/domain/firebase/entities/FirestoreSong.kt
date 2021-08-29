@@ -1,4 +1,5 @@
-package com.mite.djigibao.domain.firebase
+package com.mite.djigibao.domain.firebase.entities
+
 import com.google.gson.annotations.SerializedName
 import com.mite.djigibao.model.Instrument
 

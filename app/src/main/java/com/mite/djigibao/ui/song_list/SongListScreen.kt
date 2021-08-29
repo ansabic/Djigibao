@@ -1,4 +1,4 @@
-package com.mite.djigibao.ui.lista_pisama
+package com.mite.djigibao.ui.song_list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,7 +57,8 @@ class SongListScreen @Inject constructor() {
                             var stretchState by remember { mutableStateOf(false) }
                             SongItemStretch(
                                 song = it,
-                                stretched = stretchState
+                                stretched = stretchState,
+                                navController = navController
                             ) {
                                 stretchState = !stretchState
                             }

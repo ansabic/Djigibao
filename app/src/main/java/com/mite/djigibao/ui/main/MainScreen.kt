@@ -35,11 +35,11 @@ class MainScreen @Inject constructor() {
                         modifier = Modifier
                             .padding(top = 50.dp)
                     )
-                    DjigibaoSettingItem("Lista pisama") {
+                    DjigibaoSettingItem("Songlist") {
                         navController.navigate(Destination.SongList.name)
                     }
 
-                    DjigibaoSettingItem("Kalendar") {
+                    DjigibaoSettingItem("Calendar") {
                         navController.navigate(Destination.Calendar.name)
                     }
                     DjigibaoSettingItem("Todo") {

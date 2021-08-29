@@ -16,7 +16,7 @@ class TodoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun resolveTodos(ids: List<Long>, done: Boolean) {
-        todoDao.resolveTodoItem(ids,done)
+        todoDao.resolveTodoItem(ids, done)
     }
 
     override suspend fun insertTodo(item: TodoItem) {
@@ -24,6 +24,6 @@ class TodoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertTodoItems(items: List<TodoItem>) {
-       insertTodoItems(items)
+        todoDao.insertTodoItems(items)
     }
 }

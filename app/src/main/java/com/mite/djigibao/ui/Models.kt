@@ -1,5 +1,6 @@
 package com.mite.djigibao.ui
 
+import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +22,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.mite.djigibao.Destination
 import com.mite.djigibao.R
 import com.mite.djigibao.database.entities.Song
 import com.mite.djigibao.database.entities.TodoItem
@@ -172,8 +175,11 @@ fun SongItemStretch(
         user =
         User("Mate", Role.VOCAL),
         body = "this is a \n body \n of a \n test song",
-        creationDate = ZonedDateTime.now()
-    ), stretched: Boolean = true, click: () -> Unit = { }
+        creationDate = ZonedDateTime.now(),
+    ),
+    stretched: Boolean = true,
+    navController: NavController? = null,
+    click: () -> Unit = { }
 ) =
     Box(
         modifier = Modifier
@@ -215,18 +221,41 @@ fun SongItemStretch(
             )
             if (stretched) {
                 Column {
-                    Text(
-                        text = song.user?.username ?: "",
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(
-                                end = 18.dp
-                            ),
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            color = Purple700
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp)
+                    ) {
+
+                        Image(
+                            painter = painterResource(android.R.drawable.ic_menu_edit),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(
+                                    width = 20.dp,
+                                    height = 20.dp
+                                )
+                                .clickable {
+                                    navController?.currentBackStackEntry?.arguments =
+                                        Bundle().apply {
+                                            putParcelable("song", song)
+                                        }
+                                    navController?.navigate(Destination.EditSong.name)
+                                },
                         )
-                    )
+                        Text(
+                            text = song.user.username ?: "",
+                            modifier = Modifier
+                                .padding(
+                                    end = 18.dp
+                                ),
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                color = Purple700
+                            )
+                        )
+                    }
                     Spacer(
                         modifier = Modifier
                             .padding(bottom = 12.dp)
@@ -383,13 +412,14 @@ fun DjigibaoButtonStretch(text: String, visible: Boolean = true, action: () -> U
     }
 }
 
+@Preview
 @Composable
 fun DjigibaoDropDownItem(
     role: Role = Role.NONE
 ) {
     Text(
         text = role.text,
-        color = Color.White,
+        color = Purple500,
         textAlign = TextAlign.Center,
         fontSize = 14.sp,
         modifier = Modifier
@@ -404,7 +434,7 @@ fun DjigibaoUserDropDownItem(
 ) {
     Text(
         text = user.username,
-        color = Color.White,
+        color = Purple500,
         textAlign = TextAlign.Center,
         fontSize = 14.sp,
         modifier = Modifier

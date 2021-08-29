@@ -166,7 +166,7 @@ class CalendarScreen {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Kreirano: ${
+                        text = "Created at: ${
                             event.createdDate.format(
                                 DateTimeFormatter.ofPattern("dd.MM.yyyy")
                             )
@@ -176,7 +176,7 @@ class CalendarScreen {
                         modifier = Modifier
                     )
                     Text(
-                        text = "Datum održavanja: ${
+                        text = "Due date: ${
                             event.dueDate.format(
                                 DateTimeFormatter.ofPattern("dd.MM.yyyy")
                             )

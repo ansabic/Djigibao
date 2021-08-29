@@ -8,5 +8,6 @@ interface IEventRepository {
     suspend fun getAllEvents(): List<Event>
     suspend fun deleteEvent(id: Long)
     suspend fun insertEvent(event: Event)
+    suspend fun insertEvents(events: List<Event>)
 
 }
