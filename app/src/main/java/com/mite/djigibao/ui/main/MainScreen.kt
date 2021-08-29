@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.mite.djigibao.ui.Destination
+import com.mite.djigibao.Destination
 import com.mite.djigibao.ui.DjigibaoSettingItem
 import com.mite.djigibao.ui.DjigibaoTitle
 import com.mite.djigibao.ui.theme.Purple200
@@ -17,8 +17,8 @@ import javax.inject.Inject
 class MainScreen @Inject constructor() {
 
     @Composable
-    fun MainScreen(viewModel:MainViewModel,navController: NavHostController) {
-       Scaffold {
+    fun MainScreen(viewModel: MainViewModel, navController: NavHostController) {
+        Scaffold {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -40,7 +40,7 @@ class MainScreen @Inject constructor() {
                     }
 
                     DjigibaoSettingItem("Kalendar") {
-
+                        navController.navigate(Destination.Calendar.name)
                     }
                     DjigibaoSettingItem("Todo") {
                         navController.navigate(Destination.Todo.name)

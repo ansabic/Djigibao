@@ -14,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.mite.djigibao.Destination
 import com.mite.djigibao.model.Role
 import com.mite.djigibao.ui.*
 import com.mite.djigibao.ui.theme.Purple200
 import javax.inject.Inject
 
-class LoginScreen @Inject constructor()
-{
+class LoginScreen @Inject constructor() {
     @ExperimentalAnimationApi
     @Composable
     fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
@@ -55,21 +55,21 @@ class LoginScreen @Inject constructor()
                         modifier = Modifier
                             .padding(top = 100.dp)
                     )
-                    UsernameInput{
+                    UsernameInput {
                         viewModel.usernameUpdate(it)
                     }
                     Spacer(
                         Modifier
                             .padding(top = 10.dp)
                     )
-                    PasswordInput{
+                    PasswordInput {
                         viewModel.passwordUpdate(it)
                     }
                     Spacer(
                         Modifier
                             .padding(top = 10.dp)
                     )
-                    if(loggedIn.value == false) {
+                    if (loggedIn.value == false) {
                         Row(
                             modifier = Modifier
                                 .width(300.dp),
@@ -120,17 +120,19 @@ class LoginScreen @Inject constructor()
                 }
 
             }
-            Box(modifier = Modifier
-                .fillMaxHeight(),
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight(),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 AnimatedVisibility(
                     warning.value
-                ){
-                    Snackbar{
+                ) {
+                    Snackbar {
                         Text(
                             text = "You must fill all fields to continue!",
-                            textAlign = TextAlign.Center)
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }

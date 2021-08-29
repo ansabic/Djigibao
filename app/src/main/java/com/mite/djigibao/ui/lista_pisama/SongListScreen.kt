@@ -15,22 +15,18 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.mite.djigibao.database.entities.Song
-import com.mite.djigibao.database.entities.User
-import com.mite.djigibao.model.Role
-import com.mite.djigibao.ui.Destination
+import com.mite.djigibao.Destination
 import com.mite.djigibao.ui.SongItemStretch
 import com.mite.djigibao.ui.theme.Purple200
-import java.time.OffsetDateTime
 import javax.inject.Inject
 
 class SongListScreen @Inject constructor() {
 
     @Composable
-    fun SongList(viewModel: SongListViewModel,navController: NavController) {
+    fun SongList(viewModel: SongListViewModel, navController: NavController) {
         viewModel.getSongs()
         val goToNewSong = viewModel.goToNewSong.observeAsState(false)
-        if(goToNewSong.value) {
+        if (goToNewSong.value) {
             navController.navigate(Destination.NewSong.name)
             viewModel.leftScreen()
         }
@@ -39,54 +35,56 @@ class SongListScreen @Inject constructor() {
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-           Column(
-               modifier = Modifier
-                   .fillMaxSize()
-                   .background(Purple200)
-           ) {
-               Spacer(
-                   modifier = Modifier
-                       .padding(
-                           bottom = 20.dp
-                       )
-               )
-               LazyColumn(
-                   modifier = Modifier
-                       .fillMaxSize()
-                       .padding(horizontal = 10.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Purple200)
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .padding(
+                            bottom = 20.dp
+                        )
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 10.dp)
 
-               ) {
-                   songs.value?.forEach {
-                       item {
-                           var stretchState by remember { mutableStateOf(false) }
-                           SongItemStretch(
-                               song = it,
-                               stretched = stretchState
-                           ) {
-                               stretchState = !stretchState
-                           }
-                           Spacer(
-                               modifier = Modifier
-                                   .padding(
-                                       bottom = 4.dp
-                                   )
-                           )
-                       }
+                ) {
+                    songs.value?.forEach {
+                        item {
+                            var stretchState by remember { mutableStateOf(false) }
+                            SongItemStretch(
+                                song = it,
+                                stretched = stretchState
+                            ) {
+                                stretchState = !stretchState
+                            }
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(
+                                        bottom = 4.dp
+                                    )
+                            )
+                        }
 
-                   }
+                    }
 
-               }
-           }
+                }
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(end = 25.dp,bottom = 25.dp)
+                    .padding(end = 25.dp, bottom = 25.dp)
             ) {
-                FloatingActionButton(onClick = {
-                    viewModel.addNewSong()
-                },
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.addNewSong()
+                    },
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)){
+                        .align(Alignment.BottomEnd)
+                ) {
                     Image(
                         painter = painterResource(android.R.drawable.ic_input_add),
                         colorFilter = ColorFilter.tint(Color.White),

@@ -7,7 +7,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mite.djigibao.ui.Destination
+import com.mite.djigibao.ui.calendar.CalendarScreen
+import com.mite.djigibao.ui.calendar.CalendarViewModel
 import com.mite.djigibao.ui.lista_pisama.SongListScreen
 import com.mite.djigibao.ui.lista_pisama.SongListViewModel
 import com.mite.djigibao.ui.login.LoginScreen
@@ -18,6 +19,15 @@ import com.mite.djigibao.ui.new_song.NewSongScreen
 import com.mite.djigibao.ui.new_song.NewSongViewModel
 import com.mite.djigibao.ui.todo.TodoScreen
 import com.mite.djigibao.ui.todo.TodoViewModel
+
+sealed class Destination(val name: String) {
+    object Login : Destination("login")
+    object MainScreen : Destination("main_screen")
+    object SongList : Destination("song_list")
+    object NewSong : Destination("new_song")
+    object Todo : Destination("todo")
+    object Calendar : Destination("calendar")
+}
 
 @ExperimentalAnimationApi
 @Preview
@@ -47,7 +57,11 @@ fun Navigation() {
         }
         composable(route = Destination.Todo.name) {
             val viewModel = hiltViewModel<TodoViewModel>()
-            TodoScreen().TodoScreen(viewModel,navController)
+            TodoScreen().TodoScreen(viewModel, navController)
+        }
+        composable(route = Destination.Calendar.name) {
+            val viewModel = hiltViewModel<CalendarViewModel>()
+            CalendarScreen().Calendar(viewModel, navController)
         }
     }
 }

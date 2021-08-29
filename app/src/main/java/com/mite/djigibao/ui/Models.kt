@@ -1,7 +1,9 @@
 package com.mite.djigibao.ui
 
-import android.widget.Space
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -29,13 +31,6 @@ import com.mite.djigibao.ui.theme.Purple700
 import com.mite.djigibao.ui.theme.Shapes
 import java.time.ZonedDateTime
 
-sealed class Destination(val name: String) {
-    object Login : Destination("login")
-    object MainScreen : Destination("main_screen")
-    object SongList : Destination("song_list")
-    object NewSong : Destination("new_song")
-    object Todo : Destination("todo")
-}
 
 @Preview
 @Composable
@@ -78,14 +73,16 @@ fun NewTodoItem(newItem: (TodoItem) -> Unit = {}) {
                 colorFilter = ColorFilter.tint(Color.Green),
                 contentDescription = "",
                 modifier = Modifier
-                    .size(width = 25.dp,height = 25.dp)
+                    .size(width = 25.dp, height = 25.dp)
                     .align(Alignment.CenterVertically)
                     .clickable {
-                        if(text.isNotEmpty())
-                            newItem(TodoItem(
-                                text = text,
-                                done = false
-                            ))
+                        if (text.isNotEmpty())
+                            newItem(
+                                TodoItem(
+                                    text = text,
+                                    done = false
+                                )
+                            )
                     }
             )
         }
@@ -95,18 +92,24 @@ fun NewTodoItem(newItem: (TodoItem) -> Unit = {}) {
 @Preview
 @Composable
 fun TodoItem(
-    resolved: Boolean = false,
-    text: String = "test tasfwfsdf text",
+    item: TodoItem = TodoItem(
+        "asdasdasa asdasd", false
+    ),
     onCheck: (Boolean) -> Unit = {},
     deleteTodo: () -> Unit = {}
 ) {
+    var done by remember { mutableStateOf(item.done) }
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(vertical = 5.dp,horizontal = 10.dp)
+            .padding(vertical = 5.dp, horizontal = 10.dp)
+            .clickable {
+                done = !done
+                onCheck(done)
+            }
+
     ) {
-        var done by remember { mutableStateOf(resolved) }
 
         Row(
             modifier = Modifier
@@ -121,27 +124,14 @@ fun TodoItem(
                         )
                     )
                 )
-                .padding(5.dp)
-            ,
+                .padding(5.dp),
         ) {
             Spacer(
                 modifier = Modifier
                     .padding(start = 30.dp)
             )
-            Image(
-                painter = painterResource(R.drawable.tick),
-                colorFilter = ColorFilter.tint(Color.Green),
-                contentDescription = "",
-                modifier = Modifier
-                    .size(width = 25.dp, height = 25.dp)
-                    .align(Alignment.CenterVertically)
-                    .clickable {
-                        done = !done
-                        onCheck(done)
-                    },
-            )
             Text(
-                text = text,
+                text = item.text,
                 style = TextStyle(
                     fontSize = 18.sp,
                     color = Purple700,
@@ -156,13 +146,14 @@ fun TodoItem(
                     .align(Alignment.CenterVertically)
                     .fillMaxWidth(0.8f)
                     .padding(start = 30.dp)
+
             )
             Image(
                 painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
                 colorFilter = ColorFilter.tint(Color.Red),
                 contentDescription = "",
                 modifier = Modifier
-                    .size(width = 25.dp,height = 25.dp)
+                    .size(width = 25.dp, height = 25.dp)
                     .align(Alignment.CenterVertically)
                     .clickable {
                         deleteTodo()
@@ -173,15 +164,13 @@ fun TodoItem(
 }
 
 
-
 @Preview
 @Composable
 fun SongItemStretch(
     song: Song = Song(
         name = "test name",
         user =
-            User("Mate", Role.VOCAL)
-        ,
+        User("Mate", Role.VOCAL),
         body = "this is a \n body \n of a \n test song",
         creationDate = ZonedDateTime.now()
     ), stretched: Boolean = true, click: () -> Unit = { }
@@ -208,12 +197,14 @@ fun SongItemStretch(
                     )
                 )
         ) {
-            Spacer(modifier = Modifier
-                .padding(
-                    vertical = 5.dp
-                ))
+            Spacer(
+                modifier = Modifier
+                    .padding(
+                        vertical = 5.dp
+                    )
+            )
             Text(
-                text  = song.name.split(" ").joinToString(" ") {
+                text = song.name.split(" ").joinToString(" ") {
                     it.lowercase().replaceFirstChar { char -> char.titlecase() }
                 },
                 style = TextStyle(
@@ -225,7 +216,7 @@ fun SongItemStretch(
             if (stretched) {
                 Column {
                     Text(
-                        text = song.user?.username?:"",
+                        text = song.user?.username ?: "",
                         modifier = Modifier
                             .align(Alignment.End)
                             .padding(
@@ -253,13 +244,14 @@ fun SongItemStretch(
                     )
                 }
             }
-            Spacer(modifier = Modifier
-                .padding(
-                    vertical = 5.dp
-                ))
+            Spacer(
+                modifier = Modifier
+                    .padding(
+                        vertical = 5.dp
+                    )
+            )
         }
     }
-
 
 
 @Composable
@@ -286,7 +278,7 @@ fun SimpleText(title: String = "") =
     )
 
 @Composable
-fun DjigibaoSettingItem(title: String, action:() -> Unit) {
+fun DjigibaoSettingItem(title: String, action: () -> Unit) {
     Button(
         action,
         modifier = Modifier
@@ -341,7 +333,7 @@ fun PasswordInput(onTextChange: (String) -> Unit = {}) {
             Text(
                 text = "Password",
                 color = Purple700
-                )
+            )
         },
         visualTransformation = PasswordVisualTransformation(),
         modifier = Modifier
@@ -350,8 +342,8 @@ fun PasswordInput(onTextChange: (String) -> Unit = {}) {
 }
 
 @Composable
-fun DjigibaoButtonWrap(text:String, visible: Boolean = true, action:() -> Unit) {
-    if(visible) {
+fun DjigibaoButtonWrap(text: String, visible: Boolean = true, action: () -> Unit) {
+    if (visible) {
         Button(
             onClick = action,
             modifier = Modifier
@@ -369,9 +361,10 @@ fun DjigibaoButtonWrap(text:String, visible: Boolean = true, action:() -> Unit) 
         }
     }
 }
+
 @Composable
-fun DjigibaoButtonStretch(text:String, visible: Boolean = true, action:() -> Unit) {
-    if(visible) {
+fun DjigibaoButtonStretch(text: String, visible: Boolean = true, action: () -> Unit) {
+    if (visible) {
         Button(
             onClick = action,
             modifier = Modifier
@@ -419,6 +412,7 @@ fun DjigibaoUserDropDownItem(
             .wrapContentHeight()
     )
 }
+
 @Preview
 @Composable
 fun DjigibaoRoleDropdown(

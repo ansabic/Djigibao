@@ -30,7 +30,7 @@ class TodoScreen {
             modifier = Modifier
                 .fillMaxSize()
 
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -43,13 +43,12 @@ class TodoScreen {
                 LazyColumn(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(horizontal = 5.dp)
+                        .padding(start = 5.dp, end = 5.dp, bottom = 60.dp)
                 ) {
                     items.value?.forEach { todoItem ->
                         item {
                             TodoItem(
-                                resolved = todoItem.done,
-                                text = todoItem.text,
+                                item = todoItem,
                                 onCheck = {
                                     viewModel.resolveTodo(todoItem, it)
                                 },
@@ -60,6 +59,7 @@ class TodoScreen {
                         }
                     }
                 }
+
             }
             Box(
                 modifier = Modifier
